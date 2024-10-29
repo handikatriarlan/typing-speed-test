@@ -9,11 +9,18 @@ interface ThemeStore {
 export const useThemeStore = create<ThemeStore>()(
   persist(
     (set) => ({
-      isDarkMode: false,
-      toggleTheme: () => set((state) => ({ isDarkMode: !state.isDarkMode })),
+      isDarkMode: window.localStorage.getItem('theme') === 'dark' || !window.localStorage.getItem('theme'),
+      toggleTheme: () => {
+        set((state) => {
+          const newTheme = !state.isDarkMode ? 'dark' : 'light';
+          window.localStorage.setItem('theme', newTheme);
+          return { isDarkMode: !state.isDarkMode };
+        });
+      },
     }),
     {
       name: 'theme-storage',
+      getStorage: () => localStorage,
     }
   )
 );
