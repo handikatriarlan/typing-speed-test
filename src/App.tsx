@@ -2,6 +2,7 @@ import { ThemeToggle } from './components/ThemeToggle';
 import { TypingArea } from './components/TypingArea';
 import { Footer } from './components/Footer';
 import { useThemeStore } from './store/useThemeStore';
+import { Analytics } from "@vercel/analytics/react"
 
 export function App() {
   const { isDarkMode } = useThemeStore();
@@ -19,8 +20,8 @@ export function App() {
           <p className="text-center mb-12 text-gray-600 dark:text-gray-400">
             Test your typing speed and accuracy
           </p>
-
           <TypingArea />
+          <Analytics/>
         </div>
         <Footer />
       </div>
