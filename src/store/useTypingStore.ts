@@ -9,10 +9,8 @@ interface TypingStore {
   accuracy: number;
   elapsedTime: number;
   setUserInput: (input: string) => void;
-  startTest: () => void;
   resetTest: () => void;
   updateStats: () => void;
-  updateElapsedTime: () => void;
 }
 
 const sampleText = "The quick brown fox jumps over the lazy dog. Programming is both an art and a science, requiring creativity and logical thinking. Practice makes perfect when it comes to typing speed and accuracy.";
@@ -27,19 +25,15 @@ export const useTypingStore = create<TypingStore>((set, get) => ({
   elapsedTime: 0,
   
   setUserInput: (input) => {
+    const state = get();
+    if (!state.isStarted && input.length > 0) {
+      set({
+        isStarted: true,
+        startTime: Date.now(),
+      });
+    }
     set({ userInput: input });
     get().updateStats();
-  },
-  
-  startTest: () => {
-    set({
-      isStarted: true,
-      startTime: Date.now(),
-      userInput: '',
-      wpm: 0,
-      accuracy: 100,
-      elapsedTime: 0,
-    });
   },
   
   resetTest: () => {
@@ -53,28 +47,17 @@ export const useTypingStore = create<TypingStore>((set, get) => ({
     });
   },
   
-  updateElapsedTime: () => {
-    const state = get();
-    if (!state.startTime || !state.isStarted) return;
-
-    const currentTime = Date.now();
-    const elapsedTime = (currentTime - state.startTime) / 1000;
-
-    set({
-      elapsedTime: Math.round(elapsedTime),
-    });
-  },
-
   updateStats: () => {
     const state = get();
     if (!state.startTime || !state.isStarted) return;
 
     const currentTime = Date.now();
-    const elapsedTime = (currentTime - state.startTime) / 1000 / 60;
-
+    const elapsedTime = (currentTime - state.startTime) / 1000;
+    
+    const minutes = elapsedTime / 60;
     const wordsTyped = state.userInput.trim().split(/\s+/).length;
-    const wpm = Math.round(wordsTyped / elapsedTime);
-
+    const wpm = Math.round(wordsTyped / minutes) || 0;
+    
     let correctChars = 0;
     const userInputLength = state.userInput.length;
     for (let i = 0; i < userInputLength; i++) {
@@ -83,10 +66,11 @@ export const useTypingStore = create<TypingStore>((set, get) => ({
       }
     }
     const accuracy = Math.round((correctChars / userInputLength) * 100) || 100;
-
+    
     set({
       wpm,
       accuracy,
+      elapsedTime: Math.round(elapsedTime),
     });
   },
 }));
