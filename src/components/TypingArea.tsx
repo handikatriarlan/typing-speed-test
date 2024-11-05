@@ -8,7 +8,6 @@ export function TypingArea() {
     text,
     userInput,
     isStarted,
-    startTime,
     wpm,
     accuracy,
     elapsedTime,
