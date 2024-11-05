@@ -1,6 +1,6 @@
 # Typing Speed Test
 
-![Typing Speed Test Screenshot](https://ucarecdn.com/baf3f390-4ae3-4e80-9e95-aae417991529/typingspeedtest.png)
+![Typing Speed Test Screenshot](https://ucarecdn.com/35fbcbf7-1004-480c-a3ea-7b5f94513565/typingspeedtest.png)
 
 ## Overview
 
